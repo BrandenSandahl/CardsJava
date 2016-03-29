@@ -1,6 +1,8 @@
 package com.theironyard;
 
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -69,6 +71,10 @@ public class Main {
         }
     }
 
+    public static boolean isStraitFlush(HashSet<Card> hand) {
+        return isFlush(hand) && isStraight(hand);
+    }
+
     public static boolean isFourOfaKind(HashSet<Card> hand) {
         TreeMap<Integer, Integer> freqMap = createFreqMap(hand);
         return freqMap.size() == 1;
@@ -94,16 +100,30 @@ public class Main {
         return freqMap;
     }
 
+    public static Integer countStuff(HashSet<HashSet<Card>> hands, Function<HashSet<Card>, Boolean> method) {
+        hands = hands.stream()
+                .filter((hand)  ->  {
+                    return method.apply(hand);
+                })
+                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
+
+
+        return hands.size();
+    }
+
     public static void main(String[] args) {
         long beginTime = System.currentTimeMillis();
 
 	    HashSet<Card> deck = createDeck();
         HashSet<HashSet<Card>> hands = createHands(deck);
         System.out.println("total hands: " + hands.size());
-        hands = hands.stream()
-                .filter(Main::isFlush)
-                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
-        System.out.println("Total Flushes: " + hands.size());
+
+        System.out.println("Total Flushes: " + countStuff(hands, Main::isFlush));
+        System.out.println("Total Straits: " + countStuff(hands, Main::isStraight));
+        System.out.println("Total Strait Flushes: " + countStuff(hands, Main::isStraitFlush));
+        System.out.println("Total Four of a Kind: " + countStuff(hands, Main::isFourOfaKind));
+        System.out.println("Total Three of a Kind: " + countStuff(hands, Main::isThreeOfaKind));
+        System.out.println("Total Two Pair: " + countStuff(hands, Main::isTwoPair));
 
         long endTime = System.currentTimeMillis();
 
