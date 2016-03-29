@@ -45,7 +45,7 @@ public class Card {
         Card card = (Card) o;
 
         if (suit != card.suit) return false;
-        return rank == card.rank;
+        return rank.ordinal() == card.rank.ordinal();
 
     }
 
@@ -55,4 +55,6 @@ public class Card {
         result = 31 * result + (rank != null ? rank.hashCode() : 0);
         return result;
     }
+
+
 }

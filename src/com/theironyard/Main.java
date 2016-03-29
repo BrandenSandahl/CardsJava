@@ -1,12 +1,12 @@
 package com.theironyard;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.SynchronousQueue;
 import java.util.stream.Collectors;
 
 public class Main {
 
-    static HashSet<Card> createDeck() {
+    public static HashSet<Card> createDeck() {
         HashSet<Card> deck = new HashSet<>();
         for (Card.Suit suit : Card.Suit.values()) {
             for (Card.Rank rank : Card.Rank.values()) {
@@ -16,7 +16,7 @@ public class Main {
         return deck;
     }
 
-    static HashSet<HashSet<Card>> createHands (HashSet<Card> deck) {
+    public static HashSet<HashSet<Card>> createHands (HashSet<Card> deck) {
         HashSet<HashSet<Card>> hands = new HashSet<>();
         for (Card c1 : deck) {
             HashSet<Card> deck2 = (HashSet<Card>) deck.clone();
@@ -41,7 +41,7 @@ public class Main {
         return hands;
     }
 
-    static boolean isFlush(HashSet<Card> hand) {
+    public static boolean isFlush(HashSet<Card> hand) {
         HashSet<Card.Suit> suits =
                 hand.stream()
                 .map(card -> {
@@ -49,6 +49,37 @@ public class Main {
                 })
                 .collect(Collectors.toCollection(HashSet<Card.Suit>::new));
         return suits.size() == 1;
+    }
+
+    public static boolean isStraight(HashSet<Card> hand) {
+        HashSet<Card.Rank> ranks =
+                hand.stream()
+                .map(card -> {
+                    return card.rank;
+                })
+                .sorted()
+                .collect(Collectors.toCollection(HashSet<Card.Rank>::new));
+        if (ranks.size() == 4) {
+
+            ArrayList<Integer> ranksList;
+
+            ranksList = ranks.stream()
+                    .map( rank -> {
+                        return rank.ordinal();
+                    })
+                    .sorted()
+                    .collect(Collectors.toCollection(ArrayList<Integer>::new));
+
+//            ranks.forEach(ranksList::add);
+//            ranksList.forEach(rank -> rank.ordinal());
+
+            System.out.println(ranksList);
+
+            return ((ranksList.get(ranksList.size() - 1) - ranksList.get(0)) == 3);
+        } else {
+            return false;
+        }
+
     }
 
     public static void main(String[] args) {
