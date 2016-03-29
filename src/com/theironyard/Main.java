@@ -1,7 +1,6 @@
 package com.theironyard;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -57,29 +56,42 @@ public class Main {
                 .map(card -> {
                     return card.rank;
                 })
-                .sorted()
                 .collect(Collectors.toCollection(HashSet<Card.Rank>::new));
         if (ranks.size() == 4) {
 
-            ArrayList<Integer> ranksList;
-
-            ranksList = ranks.stream()
-                    .map( rank -> {
-                        return rank.ordinal();
-                    })
-                    .sorted()
-                    .collect(Collectors.toCollection(ArrayList<Integer>::new));
-
-//            ranks.forEach(ranksList::add);
-//            ranksList.forEach(rank -> rank.ordinal());
-
-            System.out.println(ranksList);
+            ArrayList<Integer> ranksList = new ArrayList<>();
+            ranks.forEach(rank -> ranksList.add(rank.ordinal()));
+            Collections.sort(ranksList);
 
             return ((ranksList.get(ranksList.size() - 1) - ranksList.get(0)) == 3);
         } else {
             return false;
         }
+    }
 
+    public static boolean isFourOfaKind(HashSet<Card> hand) {
+        TreeMap<Integer, Integer> freqMap = createFreqMap(hand);
+        return freqMap.size() == 1;
+    }
+
+    public static boolean isThreeOfaKind(HashSet<Card> hand) {
+        TreeMap<Integer, Integer> freqMap = createFreqMap(hand);
+        return freqMap.containsValue(3);
+    }
+
+    public static boolean isTwoPair(HashSet<Card> hand) {
+        TreeMap<Integer, Integer> freqMap = createFreqMap(hand);
+        return ((freqMap.size() == 2) && (freqMap.containsValue(2)));
+    }
+
+    //find this alg here http://www.mkyong.com/java/how-to-count-duplicated-items-in-java-list/
+    public static TreeMap<Integer, Integer> createFreqMap(HashSet<Card> hand) {
+        TreeMap<Integer, Integer> freqMap = new TreeMap<>();
+        for (Card c : hand) {
+            Integer count = freqMap.get(c.rank.ordinal());
+            freqMap.put(c.rank.ordinal(), (count == null) ? 1 : count + 1);
+        }
+        return freqMap;
     }
 
     public static void main(String[] args) {
@@ -87,11 +99,11 @@ public class Main {
 
 	    HashSet<Card> deck = createDeck();
         HashSet<HashSet<Card>> hands = createHands(deck);
-        System.out.println(hands.size());
+        System.out.println("total hands: " + hands.size());
         hands = hands.stream()
                 .filter(Main::isFlush)
                 .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
-        System.out.println(hands.size());
+        System.out.println("Total Flushes: " + hands.size());
 
         long endTime = System.currentTimeMillis();
 

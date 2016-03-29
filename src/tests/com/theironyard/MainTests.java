@@ -34,5 +34,38 @@ public class MainTests {
         Assert.assertTrue(Main.isStraight(hand));
     }
 
+    @Test
+    public void testIsFour() {
+        HashSet<Card> hand = new HashSet<>();
+        hand.add(new Card(Card.Suit.CLUBS, Card.Rank.THREE));
+        hand.add(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE));
+        hand.add((new Card(Card.Suit.SPADES, Card.Rank.THREE)));
+        hand.add(new Card(Card.Suit.HEARTS, Card.Rank.THREE));
+
+        Assert.assertTrue(Main.isFourOfaKind(hand));
+    }
+
+    @Test
+    public void testIsThree() {
+        HashSet<Card> hand = new HashSet<>();
+        hand.add(new Card(Card.Suit.CLUBS, Card.Rank.THREE));
+        hand.add(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE));
+        hand.add((new Card(Card.Suit.SPADES, Card.Rank.THREE)));
+        hand.add(new Card(Card.Suit.HEARTS, Card.Rank.FOUR));
+
+        Assert.assertTrue(Main.isThreeOfaKind(hand));
+    }
+
+    @Test
+    public void testIdTwoPair() {
+        HashSet<Card> hand = new HashSet<>();
+        hand.add(new Card(Card.Suit.CLUBS, Card.Rank.THREE));
+        hand.add(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE));
+        hand.add((new Card(Card.Suit.SPADES, Card.Rank.FOUR)));
+        hand.add(new Card(Card.Suit.HEARTS, Card.Rank.FOUR));
+
+        Assert.assertTrue(Main.isTwoPair(hand));
+    }
+
 
 }
